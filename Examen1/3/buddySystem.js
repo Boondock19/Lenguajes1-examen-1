@@ -18,7 +18,7 @@ console.log(args[0])
     // Al inicio toda la lista puede ser considera un gran bloque vacio.
     let arrayBloquesLibres = [{
         'primerBloqueLibre': 0,
-        'EspacioVacio':  bloques,
+        'sizeOfBlock':  bloques,
         'ultimoBloqueContiguo': bloques  - 1 
     }]
 
@@ -30,35 +30,33 @@ console.log(args[0])
     console.log('alocha existe?',arrayNombres['alocha'])
 
     process.stdin.on('data', data => {
-        
-        // console.log('Siguiente accion: ')
-        // console.log('data sin transformar',data)
+    
         const dataString = (data).toString()
         const dataArray =dataString.split(" ")
-        // console.log('data EN string transformar',dataString)
-        // console.log('data EN array transformar',dataArray)
-        // console.log('data EN posicion transformar',dataArray[2])
+        
 
         if(dataArray[0] == "RESERVAR") {
             const nombre = dataArray[1]
             const cantidad = parseInt(dataArray[2])
             if(arrayNombres[nombre]) {
                 console.log(`El nombre ${nombre} ya posee memoria reservada`)
+                console.log('Siguiente accion: ')
             } else {
                 // Hay un bloque vacio?
                 if (arrayBloquesLibres.length > 0) {
                     // Hay espacio vacio
                     // retorna -1 si no consigue un bloque de espacio contiguo suficiente
-                    const firstIndex = arrayBloquesLibres.findIndex(x => cantidad < x.EspacioVacio + 1)
+                    const firstIndex = arrayBloquesLibres.findIndex(x => cantidad < x.sizeOfBlock + 1)
                     
                     
                     if (firstIndex < 0 ) {
                         // Si no hay bloques contigios suficientes 
                         console.log(`No hay bloques contiguos suficientes para ${nombre}`)
+                        console.log('Siguiente accion: ')
                     } else {
 
                         const inicio = arrayBloquesLibres[firstIndex].primerBloqueLibre
-                        const espacioDisponible = arrayBloquesLibres[firstIndex].EspacioVacio
+                        const espacioDisponible = arrayBloquesLibres[firstIndex].sizeOfBlock
                         let final = arrayBloquesLibres[firstIndex].ulitmoBloqueContiguo 
                         // Insertamos desde inicio hasta que se hayan ingresado los bloques reservados.
                         let i = inicio
@@ -71,7 +69,7 @@ console.log(args[0])
 
                         // Modificamos la data de espacio disponible
                         arrayBloquesLibres[firstIndex].primerBloqueLibre = i
-                        arrayBloquesLibres[firstIndex].EspacioVacio = espacioDisponible - (i) + inicio
+                        arrayBloquesLibres[firstIndex].sizeOfBlock = espacioDisponible - (i) + inicio
 
                         // ingresamos el nombre en el diccionario
 
@@ -81,13 +79,12 @@ console.log(args[0])
                         }
                         
                         // Debemos eliminar del registro de espacio libre los bloques que lleguen a espacio vacio 0
-                        if(arrayBloquesLibres[firstIndex].EspacioVacio === 0) arrayBloquesLibres.splice(firstIndex,1)
-                        console.log("Array de bloques luego de insertar",arrayBloques)
-                        console.log("Array de bloques libres",arrayBloquesLibres)
-                        console.log("Array de nombres", arrayNombres)
+                        if(arrayBloquesLibres[firstIndex].sizeOfBlock === 0) arrayBloquesLibres.splice(firstIndex,1)
+                            console.log('Siguiente accion: ')
                         }
                     } else {
                         console.log(`No hay bloques contiguos suficientes para ${nombre}`)
+                        console.log('Siguiente accion: ')
                     }
             }
             
@@ -97,13 +94,14 @@ console.log(args[0])
             const nombre = dataArray[1].trim()
             if (!arrayNombres[nombre]) {
                 console.log(`${nombre} no posee memoria reservada actualmente`)
+                console.log('Siguiente accion: ')
             } else {
                 const inicio = arrayNombres[nombre].inicio
                 const final = arrayNombres[nombre].final
 
                 const  nuevoEspacio = {
                     'primerBloqueLibre': inicio,
-                    'EspacioVacio':  final - inicio + 1,
+                    'sizeOfBlock':  final - inicio + 1,
                     'ultimoBloqueContiguo': final 
                 }
 
@@ -116,22 +114,26 @@ console.log(args[0])
                     i++
                 }
 
-                console.log(`Array de bloques luego de eliminar a ${nombre}`,arrayBloques)
-                console.log("Array de bloques libres luego de eliminar",arrayBloquesLibres)
+                
                 delete arrayNombres[nombre]
-                console.log("Array de nombres luego de eliminar", arrayNombres)
-
+                
+                console.log('Siguiente accion: ')
             }
         }
 
         if(dataArray[0].trim() == "MOSTRAR") {
-            console.log('Entro en mostrar')
+            
+            // Ordenamos el diccionario como un array
             let copyArray = Object.keys(arrayNombres).map((key) => [key,arrayNombres[key]])
-            console.log('copia del dictionario como array ',copyArray)
+            
+            // ordenamos en orden de inicio de bloque
             copyArray.sort((a,b) => {
                 return a[1].inicio - b[1].inicio
             })
-            console.log('luego de ordenar copyArray ',copyArray)
+
+            console.log('Bloques ocupados: ',copyArray)
+            console.log('Bloques libres : ', arrayBloquesLibres)
+            console.log('Siguiente accion: ')
         }
 
         
