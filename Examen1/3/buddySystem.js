@@ -58,7 +58,7 @@ console.log(args[0])
                     } else {
 
                         const inicio = arrayBloquesLibres[firstIndex].primerBloqueLibre
-                        let espacioDisponible = arrayBloquesLibres[firstIndex].EspacioVacio
+                        const espacioDisponible = arrayBloquesLibres[firstIndex].EspacioVacio
                         let final = arrayBloquesLibres[firstIndex].ulitmoBloqueContiguo 
                         // Insertamos desde inicio hasta que se hayan ingresado los bloques reservados.
                         let i = inicio
@@ -71,7 +71,7 @@ console.log(args[0])
 
                         // Modificamos la data de espacio disponible
                         arrayBloquesLibres[firstIndex].primerBloqueLibre = i
-                        arrayBloquesLibres[firstIndex].EspacioVacio = bloques - (i)
+                        arrayBloquesLibres[firstIndex].EspacioVacio = espacioDisponible - (i) + inicio
 
                         // ingresamos el nombre en el diccionario
 
@@ -79,7 +79,9 @@ console.log(args[0])
                                 'inicio' : inicio,
                                 'final' : i - 1
                         }
-                            
+                        
+                        // Debemos eliminar del registro de espacio libre los bloques que lleguen a espacio vacio 0
+                        if(arrayBloquesLibres[firstIndex].EspacioVacio === 0) arrayBloquesLibres.splice(firstIndex,1)
                         console.log("Array de bloques luego de insertar",arrayBloques)
                         console.log("Array de bloques libres",arrayBloquesLibres)
                         console.log("Array de nombres", arrayNombres)
@@ -124,6 +126,12 @@ console.log(args[0])
 
         if(dataArray[0].trim() == "MOSTRAR") {
             console.log('Entro en mostrar')
+            let copyArray = Object.keys(arrayNombres).map((key) => [key,arrayNombres[key]])
+            console.log('copia del dictionario como array ',copyArray)
+            copyArray.sort((a,b) => {
+                return a[1].inicio - b[1].inicio
+            })
+            console.log('luego de ordenar copyArray ',copyArray)
         }
 
         
@@ -136,5 +144,16 @@ console.log(args[0])
     });
 
 
+const compare  = (a,b) => {
+    console.log("ENTRO EN EL SORT ",a.inicio - b.inicio)
+    if(a.inicio < b.inicio) {
+        return -1 
+    }
+    
+    if (a.inicio > b.inicio) {
+        return 1
+    }
 
+    return 0
+}
 
