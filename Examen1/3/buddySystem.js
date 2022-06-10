@@ -25,10 +25,6 @@ console.log(args[0])
     // array que se comportara como un diccionario de nombre y data asociada a ese nombre.
     let arrayNombres = []
 
-    console.log(arrayBloquesLibres)
-    console.log(arrayNombres)
-    console.log('alocha existe?',arrayNombres['alocha'])
-
     process.stdin.on('data', data => {
     
         const dataString = (data).toString()
