@@ -10,9 +10,14 @@ class Cuaternario:
         self.d = d
 
     def __add__(self,o):
-        return Cuaternario((self.a + o.a), (self.b + o.b), (self.c + o.c) , (self.d + o.d))
+        if (type(o) is int or type(o) is float) :
+            return Cuaternario((self.a + o), (self.b), (self.c) , (self.d))
+        else:
+            return Cuaternario((self.a + o.a), (self.b + o.b), (self.c + o.c) , (self.d + o.d))
 
     def __mul__(self,o):
+        if (type(o) is int or type(o) is float) :
+            return Cuaternario((self.a * o), (self.b), (self.c) , (self.d))
         A = self.a*o.a - (self.b*o.b) - (self.c*o.c) - (self.d*o.d)
         B = self.a*o.b + self.b*o.a + self.c*o.d - self.d*o.c
         C = self.a*o.c - self.b*o.d + self.c*o.a + self.d*o.b

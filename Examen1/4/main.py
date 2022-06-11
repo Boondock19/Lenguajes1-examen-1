@@ -55,6 +55,26 @@ print("MODULO de un producto : ")
 
 print("Multiplicacion : ", cuar2 * cuar3)
 
-print("Modulo = : ", +(cuar2 * cuar3))
+print("Modulo = : ", )
 
 print("Confirmacion Modulo : ", +Cuaternario(-36.0,6.0,12.0,12.0))
+
+print("Pruebas de cuaternianos con int o floats : \n")
+
+sumaDeModulo = mult + +(cuar2 * cuar3)
+
+print("Resultado de suma normal :  \n", sumaDeModulo)
+
+print("Multipliquemos por 5  \n", sumaDeModulo*5)
+
+print("Suma cuaternario con floats: ", cuar + 3.0 + 7.0)
+
+print("Suma cuaternario con ints:", cuar + 3 + 7)
+
+print("Suma de dos cuaterniones , multiplicado por un modulo de cuaternario: \n ")
+
+print("Suma de dos cuaterniones : ",cuar2+cuar3)
+
+print("Modulo cuaterniones : ",+cuar3)
+
+print("Modulo cuaterniones : ", (cuar2+cuar3) * +cuar3)
