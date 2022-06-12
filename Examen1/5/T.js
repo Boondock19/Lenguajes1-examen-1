@@ -8,9 +8,14 @@
     console.log('Luego de cada accion, se pedira una siguiente')
 
     // Creando un array para cada uno de los programas a definir
-    let arrayOfPrograms = []
+    let arrayOfPrograms = [{
+        nombre: 'LOCAL',
+        lenguaje : 'LOCAL'
+    }]
     let arrayOfInterpeters = []
     let arrayOfTranslaters = []
+
+
   
 
     process.stdin.on('data', data => {
@@ -19,9 +24,10 @@
         const dataArray =dataString.split(" ")
         
 
-        if(dataArray[0] == "DEFINIR") {
-            console.log("Recuerda especificar que tipo de programa se debe DEFINIR")
-           if(dataArray[1] == "PROGRAMA") {
+        if(dataArray[0].trim() == "DEFINIR") {
+            if (dataArray.length < 2) console.log("Recuerda especificar que tipo de programa se debe DEFINIR")
+            
+           if (dataArray[1] == "PROGRAMA") {
             
             if(dataArray.length < 4) {
                 console.log('Faltan argumentos para PROGRAMA')
@@ -46,6 +52,7 @@
                     arrayOfPrograms.push(newProgram)
     
                     console.log(arrayOfPrograms)
+                    console.log(`Se definio el programa '${nombre}', ejecutable en '${lenguaje}' `)
                 }
             }
             
@@ -66,7 +73,12 @@
                         lenguaje
                     }
 
-                    arrayOfInterpeters.push(newInterpreter)
+                    if (!existeInterpretador(arrayOfInterpeters,newInterpreter)) {
+                        arrayOfInterpeters.push(newInterpreter)
+                        console.log(`Se definio un interprete para  '${lenguaje}', escrito  en '${lenguajeBase}' `)
+                        
+                    }
+                    
 
                     console.log(arrayOfInterpeters)
                 }
@@ -90,7 +102,11 @@
                         lenguajeDestino
                     }
 
-                    arrayOfTranslaters.push(newTranslater)
+                    if (!existeTranslater(arrayOfTranslaters,newTranslater)) {
+                        arrayOfTranslaters.push(newTranslater)
+                        console.log(`Se definio un traductor para  '${lenguajeOrigen}' hacia '${lenguajeDestino}', escrito  en '${lenguajeBase}' `)
+                    }
+                    
 
                     console.log(arrayOfTranslaters)
                 }   
@@ -108,18 +124,50 @@
              * a traves de varios traductores o interpretes
              */
 
+             console.log("Entro en EJECUTABLE")
             const nombre = dataArray[1].trim()
 
             let arrayFiltered = arrayOfPrograms.filter(x => x.nombre == nombre)
             // Existe el nombre? 
 
+            console.log("buscando el nombre",arrayFiltered)
+
             if( !(arrayFiltered.length > 0) ) {
-                console.log(`El programa con el ${nombre} no ha sido declarado o definido`)
+               return console.log(`El programa con el ${nombre} no ha sido declarado o definido`)
             } else {
+                
+                const programaEjecutar = arrayFiltered[0]
+                if (programaEjecutar.lenguaje === 'LOCAL') return console.log(`Si, es posible ejecutar el programa '${programaEjecutar.nombre}'`)
+                
+                //Buscamos los interpretes escritos para programaEjecutar.lenguaje
+                // Array con todos los interpretadores para programaEjecutar.lenguaje
+                const interpretadoresPrograma = arrayOfInterpeters.filter((interpreter) => interpreter.lenguaje === programaEjecutar.lenguaje)
+                const interpretadorLocal = {
+                    lenguajeBase: "LOCAL",
+                    lenguaje: programaEjecutar.lenguaje
+                }
+
+                if(existeInterpretador(interpretadoresPrograma,interpretadorLocal)) return console.log(`Si, es posible ejecutar el programa '${programaEjecutar.nombre}'`)
+
+                //Buscamos los traductores escritos para programaEjecutar.lenguaje
+                // Array con todos los traductores con origen programaEjecutar.lenguaje
+                const traductoresPrograma = arrayOfTranslaters.filter((trans) => trans.lenguajeOrigen === programaEjecutar.lenguaje)
+
+                const traductorLocal =  {
+                    lenguajeBase:"LOCAL",
+                    lenguajeOrigen:programaEjecutar.lenguaje,
+                    lenguajeDestino:"LOCAL"
+                }
+
+
+                if(existeTranslater(traductoresPrograma,traductorLocal)) return console.log(`Si, es posible ejecutar el programa '${programaEjecutar.nombre}'`) 
+
+            
+
 
             }
             
-            console.log("Entro en EJECUTABLE")
+            console.log(`No, es posible ejecutar el programa '${nombre}'`)
             console.log("Siguiente accion: ")
         }
 
@@ -133,4 +181,23 @@
         
     });
 
+/**
+ * 
+ * @param {Objecto que representa una instacia de un interprete} interpreter 
+ * @returns true si existe y false en caso contrario.
+ */
+const existeInterpretador = (arr,interpreter) => {
+    return arr.some(inter => (inter.lenguaje === interpreter.lenguaje 
+        && inter.lenguajeBase === interpreter.lenguajeBase ))
+} 
 
+/**
+ * 
+ * @param {Objecto que representa una instacia de un traductor} trans
+ * @returns true si existe y false en caso contrario.
+ */
+ const existeTranslater = (arr,translater) => {
+    return arr.some(trans => (trans.lenguajeOrigen === translater.lenguajeOrigen 
+        && trans.lenguajeDestino === translater.lenguajeDestino 
+        && trans.lenguajeBase === translater.lenguajeBase ))
+} 
