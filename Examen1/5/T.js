@@ -32,7 +32,6 @@
             if(dataArray.length < 4) {
                 console.log('Faltan argumentos para PROGRAMA')
             } else {
-                console.log("Entro en PROGRAMA")
                 // Programa con nombre escrito en lenguaje 
                 const nombre = dataArray[2]
                 
@@ -51,7 +50,6 @@
     
                     arrayOfPrograms.push(newProgram)
     
-                    console.log(arrayOfPrograms)
                     console.log(`Se definio el programa '${nombre}', ejecutable en '${lenguaje}' `)
                 }
             }
@@ -60,7 +58,6 @@
            }
 
            if(dataArray[1] == "INTERPRETE") {
-                console.log("Entro en INTERPRETE")
 
                 if(dataArray.length < 4) {
                     console.log('Faltan argumentos para INTERPRETE')
@@ -77,16 +74,13 @@
                         arrayOfInterpeters.push(newInterpreter)
                         console.log(`Se definio un interprete para  '${lenguaje}', escrito  en '${lenguajeBase}' `)
                     }
-                    
-
-                    console.log(arrayOfInterpeters)
+            
                 }
                 
                 console.log("Siguiente accion: ")
             }
 
             if(dataArray[1] == "TRADUCTOR") {
-                console.log("Entro en TRADUCTOR ")
 
                 if(dataArray.length < 5) {
                     console.log('Faltan argumentos para TRADUCTOR ')
@@ -105,9 +99,7 @@
                         arrayOfTranslaters.push(newTranslater)
                         console.log(`Se definio un traductor para  '${lenguajeOrigen}' hacia '${lenguajeDestino}', escrito  en '${lenguajeBase}' `)
                     }
-                    
-
-                    console.log(arrayOfTranslaters)
+                
                 }   
                
                 console.log("Siguiente accion: ")
@@ -123,13 +115,11 @@
              * a traves de varios traductores o interpretes
              */
 
-             console.log("Entro en EJECUTABLE")
             const nombre = dataArray[1].trim()
 
             let arrayFiltered = arrayOfPrograms.filter(x => x.nombre == nombre)
             // Existe el nombre? 
 
-            console.log("buscando el nombre",arrayFiltered)
 
             if( !(arrayFiltered.length > 0) ) {
                return console.log(`El programa con el ${nombre} no ha sido declarado o definido`)
@@ -165,7 +155,7 @@
                 // Llamamos a la recuersion
                 
                 let esEjecutable = revisionProfunda(interpretadoresPrograma,traductoresPrograma)
-                console.log("esEjecutable",esEjecutable)
+                
                 if(esEjecutable) return console.log(`Si, es posible ejecutar el programa '${programaEjecutar.nombre}'`)
 
             }
@@ -207,15 +197,13 @@ const existeInterpretador = (arr,interpreter) => {
 
 
 const revisionProfunda = (filtroInterpretadores,filtroTraductores) => {
-    console.log('filtroInterpretadores', filtroInterpretadores)
-    console.log('filtroTraductores',filtroTraductores)
+    
     const interpretadorLocal = filtroInterpretadores.filter((interpretador) => interpretador.lenguajeBase === 'LOCAL')
     const traductorLocal = filtroTraductores.filter((traductor) => traductor.lenguajeBase === 'LOCAL')
-    console.log(`InterpretadorLocal Y length ,  ${interpretadorLocal.length}`, interpretadorLocal , )
-    console.log(`TraductorLocal Y length ,  ${traductorLocal.length}` ,traductorLocal)
+   
     let newFiltroInterpretes = []
     let newFiltroTraductores = []
-    console.log(`length ${interpretadorLocal.length} y la evaluacion dio ${interpretadorLocal.length > 0}`)
+    
     let call;
     let call2
     
