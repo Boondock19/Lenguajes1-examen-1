@@ -76,7 +76,6 @@
                     if (!existeInterpretador(arrayOfInterpeters,newInterpreter)) {
                         arrayOfInterpeters.push(newInterpreter)
                         console.log(`Se definio un interprete para  '${lenguaje}', escrito  en '${lenguajeBase}' `)
-                        
                     }
                     
 
@@ -163,7 +162,11 @@
                 if(existeTranslater(traductoresPrograma,traductorLocal)) return console.log(`Si, es posible ejecutar el programa '${programaEjecutar.nombre}'`) 
 
             
-
+                // Llamamos a la recuersion
+                
+                let esEjecutable = revisionProfunda(interpretadoresPrograma,traductoresPrograma)
+                console.log("esEjecutable",esEjecutable)
+                if(esEjecutable) return console.log(`Si, es posible ejecutar el programa '${programaEjecutar.nombre}'`)
 
             }
             
@@ -201,3 +204,63 @@ const existeInterpretador = (arr,interpreter) => {
         && trans.lenguajeDestino === translater.lenguajeDestino 
         && trans.lenguajeBase === translater.lenguajeBase ))
 } 
+
+
+const revisionProfunda = (filtroInterpretadores,filtroTraductores) => {
+    console.log('filtroInterpretadores', filtroInterpretadores)
+    console.log('filtroTraductores',filtroTraductores)
+    const interpretadorLocal = filtroInterpretadores.filter((interpretador) => interpretador.lenguajeBase === 'LOCAL')
+    const traductorLocal = filtroTraductores.filter((traductor) => traductor.lenguajeBase === 'LOCAL')
+    console.log(`InterpretadorLocal Y length ,  ${interpretadorLocal.length}`, interpretadorLocal , )
+    console.log(`TraductorLocal Y length ,  ${traductorLocal.length}` ,traductorLocal)
+    let newFiltroInterpretes = []
+    let newFiltroTraductores = []
+    console.log(`length ${interpretadorLocal.length} y la evaluacion dio ${interpretadorLocal.length > 0}`)
+    let call;
+    let call2
+    
+    
+    if (interpretadorLocal.length > 0) {
+        return true
+    } else {
+        filtroInterpretadores.forEach(element => {
+            arrayOfInterpeters.forEach(inter => {
+                if(element.lenguajeBase === inter.lenguaje) {
+                    newFiltroInterpretes.push(inter)
+                }
+            })
+        
+            arrayOfTranslaters.forEach(trans => {
+                if(element.lenguajeBase === trans.lenguajeOrigen) {
+                    newFiltroTraductores.push(trans)
+                }
+            })
+            
+            call = revisionProfunda(newFiltroInterpretes,newFiltroTraductores)
+        });
+ 
+    }
+
+    if(traductorLocal.length > 0) {
+        return true
+    } else {
+        filtroTraductores.forEach(element => {
+            
+            arrayOfInterpeters.forEach(inter => {
+                if(element.lenguajeBase === inter.lenguaje) {
+                    newFiltroInterpretes.push(inter)
+                }
+            })
+
+            arrayOfTranslaters.forEach(trans => {
+                if(element.lenguajeBase === trans.lenguajeOrigen) {
+                    newFiltroTraductores.push(trans)
+                }
+            })
+
+            call2 = revisionProfunda(newFiltroInterpretes,newFiltroTraductores)
+        })
+    }
+
+    return (call || call2 )
+}
