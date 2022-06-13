@@ -143,7 +143,7 @@ let args = process.argv.slice(2)
 
 
 const compare  = (a,b) => {
-    console.log("ENTRO EN EL SORT ",a.inicio - b.inicio)
+    
     if(a.inicio < b.inicio) {
         return -1 
     }
